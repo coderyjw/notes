@@ -305,6 +305,176 @@ export default function App() {
 
 实际的目的是为了性能优化
 
-useCallback返回一个函数的memoized(记忆的)
+useCallback返回一个函数的memoized(记忆的)回调函数
 
 在依赖不变的情况下，多次定义的时候，返回的值是相同的
+
+一般情况是将一个组件中的函数，传递给子元素进行回调使用时，使用useCallback对函数进行处理
+
+- 用法
+
+```javascript
+// useCallback 在依赖（用例中指a、b）不变的情况下，多次定义的时候，返回的值是相同的
+const memoizedCallback = useCallback(
+  () => {
+    doSomething(a,b)
+  },  
+  [a,b],
+)
+```
+
+
+
+## 8. useMemo
+
+useMemo实际的目的也是为了进行性能的优化
+
+useMemo也是返回一个memoized(记忆的)值
+
+在依赖不变的情况下，多次定义的时候，返回的值是相同的
+
+- 用法
+
+```javascript
+const memoizedValue = useMemo(() => computeExpensiveValue(a, b), [a, b]);
+```
+
+- useCallBack 和 useMemo的区别
+
+useCallBack 的返回值是一个函数 ，对函数做优化，而useMemo的返回值可以是普通的值、对象或者函数，对返回值做优化
+
+```
+useCallback(fn, deps)` 相当于 `useMemo(() => fn, deps)
+```
+
+
+
+## 9. useRef
+
+useRef返回一个ref对象，返回的ref对象在组件的整个生命周期保持不变
+
+- 用法
+
+1. 引入DOM(或者组件，需要时class组件，因为函数式组件没有实例对象)元素
+
+```javascript
+export default function App() {
+  const ref = useRef()
+  const changeText = () => {
+    ref.current.innerHTML = 'world'
+  }
+  return (
+    <>
+      <div ref={ref}>hello</div>
+      <button onClick={changeText}>CHANGE</button>
+    </>
+  )
+}
+```
+
+
+
+1. 保存一个数据，这个对象在整个生命周期中可以保持不变
+
+```JAVASCRIPT
+import React,{useState, useEffect, useRef} from 'react'
+
+
+export default function App() {
+  const [counter, setCounter] = useState(0)
+  const numRef = useRef(counter)
+
+  // 点击按钮+10重新渲染组件后调用 变更 .current 属性不会引发组件重新渲染
+  // 所以页面上numRef.current会一直显示上一次的值，其实已经改了但是没有渲染，下次点击+10渲染后numRef.current相对于counter又是上一次的值
+  useEffect(() => {
+    numRef.current = counter
+    console.log('numRef.current:',numRef.current)
+  }, [counter])
+  
+  return (
+    <>
+      <div>counter上一次的值： {numRef.current}</div>
+      <div>counter这一次的值: {counter}</div>
+      <button onClick={e => setCounter(counter + 10)}>+10</button>
+    </>
+  )
+}
+
+```
+
+
+
+## 10. useImperativeHandle
+
+`useImperativeHandle` 可以让你在使用 `ref` 时自定义暴露给父组件的实例值
+
+因为react希望我们不应该把子组件所有的东西都暴露给父组件
+
+```javascript
+import React, {forwardRef,useRef,useImperativeHandle } from 'react'
+
+const FancyInput = forwardRef((props, ref) => {
+  const inputRef = useRef();
+  // 父组件只能调用current中的focus方法
+  useImperativeHandle(ref, () => ({
+    focus: () => {
+      console.log('useImperativeHandle中的focus')
+      inputRef.current.focus();
+    }
+  }), [inputRef.current]);
+  return <input ref={inputRef}  />;
+})
+
+export default function App() {
+  const ref = useRef()
+  return (
+    <div>
+      <FancyInput ref={ref}/>
+      <button onClick={e => ref.current.focus()}>聚焦</button>
+    </div>
+  )
+}
+
+```
+
+
+
+## 11. useLayoutEffect
+
+- useLayoutEffect和useEffect非常相似，实际上他们只有一点区别
+  - useEffect会在渲染的内容更新到DOM上后执行，不会阻塞DOM的更新
+  - useLayoutEffect会在渲染的内容更新到DOM上之前执行，会阻塞DOM的更新
+- 如果希望在某些操作发生之后在更新DOM，应该选择useLayoutEffect
+
+
+
+
+
+## 12. 自定义Hook
+
+通过自定义 Hook，可以将组件逻辑提取到可重用的函数中。
+
+当我们想在两个函数之间共享逻辑时，我们会把它提取到第三个函数中。而组件和 Hook 都是函数，所以也同样适用这种方式。
+
+**自定义 Hook 是一个函数，其名称以 “`use`” 开头，函数内部可以调用其他的 Hook。**
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
