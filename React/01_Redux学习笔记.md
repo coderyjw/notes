@@ -446,6 +446,182 @@ export default connect(mapStateToProps, mapDispatchToProps)(App)
 
 
 
+## 5. Redux中间件
+
+### 5.1 Redux中间件介绍
+
+- 问题
+
+  上面讲的状态存储都是一般的本地状态，派发的action也都是同步代码，而redux默认是没有对异步请求的数据进行状态管理的，但事实上，网络请求到的数据也属于我们状态管理的一部分，其实也应该交给redux来管理。那redux应该如何进行异步的操作呢?答案是中间件(middleware) 
+  
+- redux中间件的概念
+
+  - 这个中间件的目的就是在dispatch的action和最终到达reducer之间，扩展一些自己的代码
+  - 比如日志记录、调用异步接口、添加代码调试功能
+
+
+
+### 5.2  中间件一 redux-thunk
+
+- redux-thunk是如何做到可以发送异步请求的呢？
+  - 默认情况下dispatch 的action是一个对象
+  - 而redux-thunk可以让action是一个函数
+  - 这个函数会被调用，并且穿个这个函数一个dispatch函数和getState函数
+    - dispatch用于派发action
+    - getState函数考虑我么那之后的一些操作需要以来原来的状态，用于让我们获取之前的一些状态
+- redux-thunk的使用
+
+下面第4行是添加了浏览器[redux-devtools](https://github.com/zalmoxisus/redux-devtools-extension)插件的支持
+
+```javascript
+import { createStore, applyMiddleware } from 'redux'
+import thunkMiddleware from 'redux-thunk'
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+const store = createStore(reducer, /* preloadedState, */ composeEnhancers(
+  applyMiddleware(thunkMiddleware) // 添加redux-thunk中间件
+));
+```
+
+
+
+```javascript
+// 之前 dispatch 接受一个对象
+const mapDispatchToProps = dispatch => {
+  return {
+    incremented() {
+      dispatch({ type: 'counter/incremented' })
+    },
+    decremented() {
+      dispatch({ type: 'counter/decremented' })
+    }
+  }
+}
+
+// 使用redux-thunk dispatch 接受一个函数
+const mapDispatchToProps = dispatch => {
+  return {
+    incremented() {
+      dispatch(asyncAction)
+    },
+    decremented() {
+      dispatch({ type: 'counter/decremented' })
+    }
+  }
+}
+
+const asyncAction = (dispatch, getStatae) => {
+  // 模拟异步请求
+  setTimout(() => {
+    dispatch({ type: 'counter/incremented' })
+    dispatch({ type: 'counter/incremented' })
+    dispatch({ type: 'counter/incremented' })
+  }, 3000)
+}
+```
+
+
+
+### 5.3 中间件二 redux-saga
+
+```javascript
+import { createStore, applyMiddleware, compose } from 'redux'
+import createSagaMiddleware from 'redux-saga'
+import saga from './saga'
+
+const initState = {
+  value: 0
+}
+
+
+const reducer = (state = initState, action) => {
+  switch(action.type) {
+    case 'increment':
+      return { ...state, value: state.value + 1 }
+    case 'decrement':
+      return { ...state, value: state.value - 1 }
+    default:
+      return state
+  }
+}
+
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
+
+// 创建sagaMiddleware中间件
+// createSagaMiddleware它是一个函数 和thunkMiddleware不同 
+const sagaMiddleware = createSagaMiddleware()
+const store = createStore(reducer, /* preloadedState, */ composeEnhancers(
+  applyMiddleware(sagaMiddleware)
+));
+
+//  要想sagaMiddleware生效 还得调用run方法 run方法接收一个生成器函数 这个生成器函数式用来描述拦截哪些action以及做出对应的操作的
+sagaMiddleware.run(saga)
+
+export default store
+```
+
+
+
+saga.js
+
+```javascript
+import { takeEvery,takeLatest, put, all } from 'redux-saga/effects'
+
+const decrementSaga = function* (){
+    // TODO：模拟做异步请求请求接口数据
+    yield new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve('wake up')
+      }, 3000);
+    })
+  
+    all([
+      yield put({type: 'decrement'})
+      yield put({type: 'decrement'})
+      yield put({type: 'decrement'})
+    ])
+   
+}
+
+function* saga() {
+  // 可以用takeEvery|takeLatest 接收两个参数 第一个参数是action的type 第二各参数是一个生成器函数
+  // 区别是takeLatest:一次只能监听一个对应的action,如果dispatch了多个，它只会执行最后一次
+  // takeEvery：每次都会被执行
+  // 这里对action='decrementSaga' 进行拦截 具体的操作放到decrementSaga中 decrementSaga是一个生成器函数
+  yield takeEvery('decrementSaga' , decrementSaga)
+}
+
+// 返回一个生成器函数
+export default saga
+```
+
+
+
+组件中调用
+
+```javascript
+const mapDispatchToProps = dispatch => {
+  return {
+    // 这里dispatch 依然接受一个函数
+    decrementSaga() {
+      dispatch({ type: 'decrementSaga' })
+    }
+  } 
+}
+```
+
+
+
+
+
+
+
+
+
+ 
+
+  
+
 
 
 
