@@ -327,3 +327,28 @@ static any(promises) {
 }
 ```
 
+
+
+## 9. 总结
+
+- 构造函数里的逻辑：
+
+1. 定义状态
+2. 定义resolve、reject回调
+3. resolve执行微任务队列：改变状态、获取value、then传入执行成功回调
+4. reject执行微任务队列：改变状态、获取reason、then传入执行失败回调
+
+
+
+- then方法的逻辑
+
+1. 判断onFulfilled、onRejected为空给默认值
+
+2. 返回Promise resovle/reject 支持链式调用、
+
+3. 判断之前的promise状态是否确定
+
+   确定的话onFufilled/onRejected直接执行
+
+4. 添加到数组中push(() => { 执行onFulfilled/onRejected 直接执行代码 })
+
