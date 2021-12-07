@@ -98,6 +98,10 @@ Function.prototype.myBind = function(thisArg, ...bindArgs) {
 4. 执行构造函数，把构造函数的属性添加到新对象；
 5. 返回该对象
 
+###  4.2 实现
+
+
+
 ```javascript
 function _new(TargetClass, ...args) {
   // 1. 创建空对象，并将新对象的__proto__属性指向构造函数的prototype
@@ -125,5 +129,4 @@ const stu = _new(Student, 'yjw', 22)
 console.log(stu);
 stu1.bar()
 ```
-
 

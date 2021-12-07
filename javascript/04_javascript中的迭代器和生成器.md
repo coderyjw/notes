@@ -181,9 +181,7 @@ const { name } = obj
 2. 生成器函数通过yield控制代码的执行流程
 3. 生成器函数返回一个生成器
 
-
-
-示例6：调用生成器函数不会执行函数里面的代码 但是会返回一个生成器，通过next方法控制函数的执行
+示例6：一个简单的生成器函数foo，执行返回一个生成器generator
 
 ```javascript
 function * foo() {
@@ -195,11 +193,56 @@ function * foo() {
 }
 
 const generator = foo() // 函数内部不执行 返回一个生成器函数
-generator.next() // 输出 step 1
-generator.next() // 输出 step 2
-generator.next() // 输出 step 3
-generator.next() // 输出 空
 ```
 
-示例7： 生成器是一个特殊的迭代器，我们上面说过迭代器的next函数入参可以是0个或者1个
+## 2.3 生成器函数的执行
+
+- 可以发现上面执行foo函数，函数执行体根本没有执行，他只是返回了一个生成器对象
+  - 那么如何让它执行函数的东西呢，调用next方法即可
+  - 生成器是特殊的迭代器，迭代器的next是会有返回值的
+  - 可以通过yield来返回结果
+
+示例7: 生成器函数的执行
+
+```javascript
+function * foo() {
+  yield 'yield1'
+  yield 'yield2'
+}
+
+const generator = foo() // 函数内部不执行 返回一个生成器函数
+
+//执行第一个yield并暂停
+console.log(generator.next()) // { value: 'yeild 1', done: false }
+//执行第二个yield并暂停
+console.log(generator.next()) // { value: 'yeild 2', done: false }
+//执行第三个yield并暂停
+console.log(generator.next()) // { value: undefined, done: true }
+```
+
+
+
+## 2.4 生成器传递参数 – next函数
+
+-  我们在调用next函数的时候，可以给它传递参数，那么这个参数会作为上一个**yield语句的返回值**
+
+示例7:
+
+```javascript
+function * foo() {
+ 	const next1 = yield 'yeild 1'
+  console.log({ next1 }) // { next1: 'next1' }
+  const next2 =  yield 'yeild 2'
+  console.log({ next2 }) // { next2: 'next2' }
+}
+
+const generator = foo() // 函数内部不执行 返回一个生成器函数
+
+//执行第一个yield并暂停
+console.log(generator.next()) // { value: 'yeild 1', done: false }
+//执行第二个yield并暂停
+console.log(generator.next('next1')) // { value: 'yeild 2', done: false }
+//执行第三个yield并暂停
+console.log(generator.next('next2')) // { value: undefined, done: true }
+```
 

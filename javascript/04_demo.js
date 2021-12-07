@@ -68,20 +68,16 @@
 // console.log(iterator.next())
 // console.log(iterator.next())
 
-function * foo() {
-  console.log("step 1")
-  const result1 = yield 'yeild 1'
-  console.log("step 2")
-  console.log(result1)
-  const result2 =  yield 'yeild 2'
-  console.log("step 3")
-  console.log(result2)
-  return 'yeild 3'
+function * foo(val) {
+  const next1 = yield 'yeild 1'
+  console.log({ next1 })
+  const next2 =  yield 'yeild 2'
+  console.log({ next2 })
 }
 
-const generator = foo()
+const generator = foo(123)
 
+console.log(generator.next())
 console.log(generator.next('next1'))
 console.log(generator.next('next2'))
-console.log(generator.next('next3'))
-console.log(generator.next())
+
