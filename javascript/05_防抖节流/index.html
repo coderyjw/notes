@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="debounce">防抖</button>
+    <button id="cancel">取消</button>
+    <script>
+      const debounceElement = document.getElementById("debounce");
+      const cancelElemetnt = document.getElementById("cancel");
+
+      const handleClick = function (e) {
+        console.log("点击了一次", e, this);
+        return "handleClick返回值";
+      };
+
+      function debounce(fn, delay, immediate = false) {
+        let timer = null;
+        let isInvoke = false;
+        function _debounce(...args) {
+          return new Promise((resolve, reject) => {
+            if (timer) clearTimeout(timer);
+
+            if (immediate && !isInvoke) {
+              try {
+                const result = fn.apply(this, args);
+                isInvoke = true;
+                resolve(result);
+              } catch (err) {
+                reject(err);
+              }
+            } else {
+              timer = setTimeout(() => {
+                try {
+                  const result = fn.apply(this, args);
+                  isInvoke = false;
+                  resolve(result);
+                } catch (err) {
+                  reject(err);
+                }
+              }, delay);
+            }
+          });
+        }
+
+        _debounce.cancel = function () {
+          clearTimeout(timer);
+          timer = null;
+        };
+        return _debounce;
+      }
+
+      const debonceClick = debounce(handleClick, 300, true);
+      const debonceCallBack = function (...args) {
+        debonceClick.apply(this, args).then((res) => {
+          console.log({ res });
+        });
+      };
+
+      debounceElement.onclick = debonceCallBack;
+      cancelElemetnt.onclick = () => {
+        console.log("取消了事件");
+        debonceClick.cancel();
+      };
+    </script>
+  </body>
+</html>
