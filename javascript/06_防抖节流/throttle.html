@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script>
+      // const handleMove = (e) => {
+      //   console.log("监听了一次鼠标移动事件");
+      // };
+
+      // const throttle = function (fn, interval) {
+      //   let nowTime;
+      //   let lastTime = 0;
+
+      //   function _throttle() {
+      //     nowTime = new Date().getTime();
+      //     if (nowTime - lastTime > interval) {
+      //       fn();
+      //       lastTime = nowTime;
+      //     }
+      //   }
+
+      //   return _throttle;
+      // };
+
+      // document.onmousemove = throttle(handleMove, 1000);
+
+      // const handleMove = (e) => {
+      //   console.log("监听了一次鼠标移动事件", e, this);
+      // };
+
+      // const throttle = function (fn, interval) {
+      //   let nowTime;
+      //   let lastTime = 0;
+
+      //   function _throttle(...args) {
+      //     nowTime = new Date().getTime();
+      //     if (nowTime - lastTime > interval) {
+      //       fn.apply(this, args);
+      //       lastTime = nowTime;
+      //     }
+      //   }
+
+      //   return _throttle;
+      // };
+
+      // document.onmousemove = throttle(handleMove, 1000);
+
+      // const handleMove = (e) => {
+      //   console.log("监听了一次鼠标移动事件", e, this);
+      // };
+
+      // const throttle = function (fn, interval, leading = true) {
+      //   let nowTime;
+      //   let lastTime = 0;
+
+      //   function _throttle(...args) {
+      //     nowTime = new Date().getTime();
+
+      //     // leading为flase表示不希望立即执行函数
+      //     // lastTime为0表示函数没执行过
+      //     if (!leading && lastTime === 0) {
+      //       lastTime = nowTime;
+      //     }
+
+      //     if (nowTime - lastTime > interval) {
+      //       fn.apply(this, args);
+      //       lastTime = nowTime;
+      //     }
+      //   }
+
+      //   return _throttle;
+      // };
+
+      // document.onmousemove = throttle(handleMove, 3000, false);
+
+      const handleMove = (e) => {
+        console.log("监听了一次鼠标移动事件", e, this);
+      };
+
+      const throttle = function (
+        fn,
+        interval,
+        leading = true,
+        trailing = false
+      ) {
+        let nowTime;
+        let lastTime = 0;
+        let timer;
+
+        function _throttle(...args) {
+          nowTime = new Date().getTime();
+          // leading为flase表示不希望立即执行函数
+          // lastTime为0表示函数没执行过
+          if (!leading && lastTime === 0) {
+            lastTime = nowTime;
+          }
+
+          if (timer) {
+            clearTimeout(timer);
+            timer = null;
+          }
+
+          if (nowTime - lastTime >= interval) {
+            fn.apply(this, args);
+            lastTime = nowTime;
+            return;
+          }
+
+          if (trailing) {
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = null;
+              lastTime = 0;
+            }, interval - (nowTime - lastTime));
+          }
+        }
+
+        return _throttle;
+      };
+
+      document.onmousemove = throttle(handleMove, 3000, true, true);
+    </script>
+  </body>
+</html>
