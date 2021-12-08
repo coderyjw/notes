@@ -68,16 +68,42 @@
 // console.log(iterator.next())
 // console.log(iterator.next())
 
-function * foo(val) {
-  const next1 = yield 'yeild 1'
-  console.log({ next1 })
-  const next2 =  yield 'yeild 2'
-  console.log({ next2 })
+// function * foo(val) {
+//   const next1 = yield 'yeild 1'
+//   console.log({ next1 })
+//   const next2 =  yield 'yeild 2'
+//   console.log({ next2 })
+// }
+
+// const generator = foo(123)
+
+// console.log(generator.next())
+// console.log(generator.next('next1'))
+// console.log(generator.next('next2'))
+
+// function createIterator(arr) {
+//     let index = 0
+//     return {
+//     next: () => {
+//       if (index < arr.length) {
+//         return { value: arr[index++], done: false}
+//       } else {
+//         return { value: undefined, done: true}
+//       }
+//     }
+//   }
+// }
+
+function * createIterator(arr) {
+  // for(const item of arr) {
+  //   yield item
+  // }
+  yield* arr
 }
 
-const generator = foo(123)
+const names = ['zhangsan', 'li', 'wangwu']
 
-console.log(generator.next())
-console.log(generator.next('next1'))
-console.log(generator.next('next2'))
-
+const iterator = createIterator(names)
+console.log(iterator.next())
+console.log(iterator.next())
+console.log(iterator.next())
