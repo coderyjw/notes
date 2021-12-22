@@ -420,3 +420,239 @@ return {
 };
 ```
 
+### 4.9 customRef
+
+创建一个自定义的 ref，并对其依赖项跟踪和更新触发进行显式控制。它需要一个工厂函数，该函数接收 `track` 和 `trigger` 函数作为参数，并且应该返回一个带有 `get` 和 `set` 的对象。
+
+使用自定义 ref 通过 `v-model` 实现 debounce 的示例：
+
+
+
+```vue
+<template>
+  <div>
+    <input v-model="message" />
+    {{ message }}
+  </div>
+</template>
+
+<script>
+import { customRef } from "vue";
+export default {
+  setup() {
+    const useDebounceRef = (value, delay = 300) => {
+      return customRef((track, trigger) => {
+        let timer
+        return {
+          get() {
+            // 依赖跟踪
+            track();
+            return value;
+          },
+          set(newValue) {
+            clearTimeout(timer)
+            timer = setTimeout(() => {
+              // 更新触发
+              trigger();
+              value = newValue;
+            }, delay)
+          },
+        };
+      });
+    };
+
+    const message = useDebounceRef("hello", 300);
+    return {
+      message,
+    };
+  },
+};
+</script>
+```
+
+
+
+## 5. computed和watch
+
+在options API中我们有computed和watch选项，在Composition API中vue也给我们提供了相应的函数。
+
+### 5.1 computed
+
+- 用法
+  - 接受一个getter函数，并根据getter的返回值返回一个不可变的响应式ref对象
+  - 接受一个具有get和set函数的对象，用来创建可写的ref对象
+
+```javascript
+const firstName = ref("Kobe");
+const lastName = ref("Bryant");
+// 接受一个getter函数
+const fullName = computed(() => {
+  return firstName.value + " " + lastName.value
+});
+
+// 接受一个具有get和set函数的对象
+const fullName1 = computed({
+  get() {
+    return firstName.value + " " + lastName.value
+  },
+  set(newValue) {
+    
+  }
+})
+```
+
+emmm 跟options API差不多
+
+### 5.2 watchEffect
+
+立即执行传入的一个函数，同时响应式追踪其依赖，并在其依赖变更时重新运行该函数。
+
+```javascript
+const firstName = ref("Kobe");
+
+watchEffect(() => {
+  console.log("firstName:", firstName.value);
+});
+```
+
+
+
+### 5.3 watch
+
+`watch` API 与选项式 APIthis.$watch (以及相应的 watch 选项) 完全等效。`watch` 需要侦听特定的数据源，并在单独的回调函数中执行副作用。默认情况下，它也是惰性的——即回调仅在侦听源发生变化时被调用。
+
+- 侦听单个数据源
+
+```javascript
+const state = reactive({
+  message: "hello world",
+});
+// 侦听一个 getter
+watch(
+  () => state.message,
+  value => {
+    console.log("state.messaeg发生了改变", value);
+  }
+);
+
+state.message = "nonono";
+
+
+// 直接侦听一个 ref
+const counter = ref(0)
+watch(count, (count, prevCount) => {
+   console.log("count发生了改变", count, prevCount);
+})
+```
+
+- 侦听多个数据源
+
+```javascript
+watch([fooRef, barRef], ([foo, bar], [prevFoo, prevBar]) => {
+  /* ... */
+})
+```
+
+
+
+- `watch` 与 watchEffect 在**手动停止侦听**、清除副作用 (watch是将 `onInvalidate` 作为第三个参数传递给回调，watchEffect是第一个参数)、**刷新时机**和调试方面有相同的行为。
+
+1. 调用返回值 手动停止监听
+
+```javascript
+const counter = ref(0)
+const stop = watch(counter, () =>{
+  console.log(counter.value)
+})
+
+// 1.调用返回值 手动停止监听
+stop()
+```
+
+2. 清除副作用
+
+```vue
+<template>
+  <div>
+    {{ counter }}
+    <button @click="changCounter">+1</button>
+  </div>
+</template>
+
+<script>
+import { ref, watchEffect } from "vue";
+export default {
+  setup() {
+    const counter = ref(0);
+
+    watchEffect((onInvalidate) => {
+      const timer = setTimeout(() => {
+        console.log("网络请求成功");
+      }, 2000);
+
+      onInvalidate(() => {
+        if (timer) {
+          clearTimeout(timer);
+          console.log("onInvalidate");
+        }
+      });
+      console.log("counter.vlaue:", counter.value);
+    });
+
+    const changCounter = () => {
+      counter.value++;
+    };
+    return {
+      changCounter,
+      counter,
+    };
+  },
+};
+</script>
+```
+
+快速点击按钮，可以看到，只有一次网络请求成功，说明onInvalidate里已经清除掉了上一次的函数请求
+
+
+
+-  watch还可有有第三个参数，第三个参数是一个对象可选immediate和deep 来设置是否立即监听变化和是否深度监听和options api一样
+
+
+
+## 6. 生命周期钩子
+
+基本那个在options API中的生命周期Composition Api中都有对应，可以通过在生命周期钩子前面加上 “on” 来访问组件的生命周期钩子
+
+| 选项式 API        | Hook inside `setup` |
+| :---------------- | ------------------- |
+| `beforeCreate`    | Not needed*         |
+| `created`         | Not needed*         |
+| `beforeMount`     | `onBeforeMount`     |
+| `mounted`         | `onMounted`         |
+| `beforeUpdate`    | `onBeforeUpdate`    |
+| `updated`         | `onUpdated`         |
+| `beforeUnmount`   | `onBeforeUnmount`   |
+| `unmounted`       | `onUnmounted`       |
+| `errorCaptured`   | `onErrorCaptured`   |
+| `renderTracked`   | `onRenderTracked`   |
+| `renderTriggered` | `onRenderTriggered` |
+| `activated`       | `onActivated`       |
+| `deactivated`     | `onDeactivated`     |
+
+> 因为 `setup` 是围绕 `beforeCreate` 和 `created` 生命周期钩子运行的，所以不需要显式地定义它们。换句话说，在这些钩子中编写的任何代码都应该直接在 `setup` 函数中编写。
+
+这些函数接受一个回调函数，当钩子被组件调用时将会被执行:
+
+比如
+
+```javascript
+export default {
+  setup() {
+    // mounted
+    onMounted(() => {
+      console.log('Component is mounted!')
+    })
+  }
+}
+```
+
