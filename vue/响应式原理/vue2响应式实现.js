@@ -42,20 +42,6 @@ function watchFn(fn) {
 }
 
 function reactive(obj) {
-  // return new Proxy(obj, {
-  //   get(target, key, receiver) {
-  //     // 做依赖收集
-  //     const depend = getDepend(target, key)
-  //     depend.depend()
-  //     return Reflect.get(target, key, receiver)
-  //   },
-  //   set(target, key, newValue , receiver) {
-  //     Reflect.set(target, key, newValue, receiver)
-  //     // 监听对象变化做出响应
-  //     const depend = getDepend(target, key)
-  //     depend.notify()
-  //   }
-  // })
   const keys = Object.keys(obj)
   keys.forEach(key => {
     let value = obj[key]

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <div id="app"></div>
+    <button id="btn">CHANGE</button>
+    <!-- renderer.js 包含上述h、mount、patch函数 -->
+    <script src="./renderer.js"></script>
+    <script>
+      // 1.通过h函数来创建一个vnode
+      const vnode1 = h("div", { class: "coder" }, [
+        h("h2", null, "当前计数： 100"),
+        h("button", null, "+1"),
+      ]);
+      // 2.通过mount函数,将vnode挂载到div#app上
+      mount(vnode1, document.getElementById("app"));
+
+      // 3.创建新的vnode2
+      const vnode2 = h(
+        "div",
+        { class: "coder", style: "font-weight: 700; font-size: 30px;" },
+        [h("h3", null, "哈哈哈"), h("b", null, "嘿嘿嘿")]
+      );
+
+      const btn = document.getElementById("btn");
+      btn.addEventListener("click", (e) => {
+        patch(vnode1, vnode2);
+      });
+    </script>
+  </body>
+</html>
