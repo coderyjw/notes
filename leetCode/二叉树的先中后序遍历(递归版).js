@@ -55,7 +55,7 @@ const postorder = function(tree) {
   postorder(tree.right);
   console.log(tree.val);
 }
-console.log("----------inorder中序遍历---------");
+console.log("----------postorder后序遍历---------");
 postorder(bt); // d e b f g c a
 
 
