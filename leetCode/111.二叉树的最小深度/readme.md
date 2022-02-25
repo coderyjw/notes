@@ -29,9 +29,9 @@
 - 树中节点数的范围在 [0, 10<sup>5</sup>] 内
 - -1000 <= Node.val <= 1000
 
-# 2.解:深度优先遍历
+# 2.解一:深度优先遍历
 
-思路：
+**思路：**
 
 1. 定义一个变量 num=10<sup>5</sup>记录最小深度
 2. 对树进行深度遍历，不断刷新最小深度
@@ -71,3 +71,46 @@ var minDepth = function (root) {
 
 - 时间复杂度：O(N)，其中  NN  是树的节点数。对每个节点访问一次。
 - 空间复杂度: O(H)，其中 HH 是树的高度。空间复杂度主要取决于递归时栈空间的开销，最坏情况下，树呈现链状，空间复杂度为 O(N)。平均情况下树的高度与节点数的对数正相关，空间复杂度为 O(logN)。
+
+# 解二: 广度优先遍历
+
+**思路：**
+
+1. 在广度优先遍历中，遇到叶子节点就停止遍历
+2. 返回叶子节点的层级
+
+```
+/**
+ * Definition for a binary tree node.
+ * function TreeNode(val, left, right) {
+ *     this.val = (val===undefined ? 0 : val)
+ *     this.left = (left===undefined ? null : left)
+ *     this.right = (right===undefined ? null : right)
+ * }
+ */
+/**
+ * @param {TreeNode} root
+ * @return {number}
+ */
+ var minDepth = function (root) {
+  if (!root) return 0;
+    // 建立一个队列存放当前当前节点以及该节点所属的层级
+    const queue = [[root, 1]];
+    while (queue.length) {
+      const [node, l] = queue.shift();
+
+      if (!node.left && !node.right) return l;
+      if (node.left) queue.push([node.left, l + 1]);
+      if (node.right) queue.push([node.right, l + 1]);
+    }
+
+};
+
+```
+
+![image.png](https://p6-juejin.byteimg.com/tos-cn-i-k3u1fbpfcp/1ccc34eaf9834557a1f3f672f072dda4~tplv-k3u1fbpfcp-watermark.image?)
+**复杂度分析**
+
+- 时间复杂度：O(N)O(N)，其中 NN 是树的节点数。对每个节点访问一次。
+
+- 空间复杂度：O(N)O(N)，其中 NN 是树的节点数。空间复杂度主要取决于队列的开销，队列中的元素个数不会超过树的节点数。
