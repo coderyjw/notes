@@ -58,6 +58,7 @@ const inorder = function (tree) {
 console.log("----------inorder中序遍历---------");
 inorder(bt); // d b e a f c f
 
+// 左右根 把他倒过来变成 根右左 跟先序遍历根左右很相似 最后再把子节点逆序的输出访问
 const postorder = function (tree) {
   const stack = [tree];
   const outputStack = [];
