@@ -25,7 +25,7 @@
 - POST 在服务器创建资源
 - PUT 在服务器修改资源
 - DELETE 在服务器删除资源
-- OPTION 跟跨域相关 
+- OPTIONS 跟跨域相关 
 - TRACE 用于显示调试信息
 - CONNECT 代理
 - PATCH 对资源进行部分更新（极少用）
