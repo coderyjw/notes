@@ -2,6 +2,8 @@
  * @param {number[]} nums
  * @return {number[][]}
  * 回溯算法
+ * 时间复杂度 O（n!）
+ * 空间复杂度 O（n） 递归的深度就是nums.length
  */
 var permute = function (nums) {
   const res = [];
