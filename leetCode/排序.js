@@ -24,13 +24,11 @@ Array.prototype.bubbleSort = function () {
 Array.prototype.selectionSort = function () {
   for (let i = 0; i < this.length - 1; i++) {
     let minIndex = i;
-    const tmp = this[minIndex];
     for (let j = i + 1; j < this.length; j++) {
-      if (this[j] < this[minIndex]) {
-        minIndex = j;
-      }
+      minIndex = this[j] < this[minIndex] ? j : minIndex;
     }
     if (minIndex !== i) {
+      const tmp = this[i];
       this[i] = this[minIndex];
       this[minIndex] = tmp;
     }
