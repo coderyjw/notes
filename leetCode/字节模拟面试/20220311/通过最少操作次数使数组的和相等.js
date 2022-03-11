@@ -19,7 +19,6 @@ var minOperations = function (nums1, nums2) {
   let p = bigArr.length - 1;
   let q = 0;
   let result = 0;
-  console.log(bigArr, smallArr);
 
   while (diff > 0 && (p >= 0 || q < smallArr.length)) {
     if (bigArr[p] - 1 >= 6 - smallArr[q]) {
