@@ -4,7 +4,7 @@
   服务端判断资源是否修改
   为修改返回 304
 
-  1. 服务端给客户端 Last-Modify 客户端给服务端 If-Modify-Since
+  1. 服务端给客户端 Last-Modified 客户端给服务端 If-Modified-Since
   2. 服务端给客户端 ETag(指纹) 客户端给服务端 If-None-Match
 
   - 协商缓存优先使用 ETag
