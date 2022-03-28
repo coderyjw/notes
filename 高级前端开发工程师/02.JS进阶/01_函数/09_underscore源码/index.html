@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="./_.js"></script>
+    <script>
+      console.log(
+        _.chain([1, 2, 3, 4, 4, 4, 4, 5, 6, "a", "A"])
+          .unique(function (i) {
+            return typeof i === "string" ? i.toLowerCase() : i;
+          })
+          .ending()
+      );
+
+      console.log(
+        _([1, 2, 3, 4, 4, 4, 4, 5, 6, "a", "A"])
+          .chain()
+          .unique(function (i) {
+            return typeof i === "string" ? i.toLowerCase() : i;
+          })
+          .ending()
+      );
+    </script>
+  </body>
+</html>
