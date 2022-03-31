@@ -1,3 +1,13 @@
+/**
+ * @param {number[]} nums
+ * @return {number[]}
+ made by yjw
+ */
+var sortArray = function (nums) {
+  return nums.sort((prev, next) => prev - next);
+};
+
+// 冒泡
 Array.prototype.bubbleSort = function () {
   const len = this.length;
   for (let i = 0; i < len - 1; i++) {
@@ -11,6 +21,7 @@ Array.prototype.bubbleSort = function () {
   }
 };
 
+// 选择
 Array.prototype.selectionSort = function () {
   const len = this.length;
   for (let i = 0; i < len; i++) {
@@ -26,6 +37,7 @@ Array.prototype.selectionSort = function () {
   }
 };
 
+// 插入
 Array.prototype.inserttionSort = function () {
   let len = this.length;
   for (let i = 1; i < len; i++) {
@@ -43,6 +55,7 @@ Array.prototype.inserttionSort = function () {
   }
 };
 
+// 归并
 Array.prototype.mergeSort = function () {
   const merge = function (list) {
     const len = list.length;
@@ -73,6 +86,7 @@ Array.prototype.mergeSort = function () {
   result.forEach((n, i) => (this[i] = n));
 };
 
+// 快排
 Array.prototype.quickSort = function () {
   const rec = function (list) {
     if (list <= 1) return list;
@@ -91,14 +105,3 @@ Array.prototype.quickSort = function () {
   const result = rec(this);
   result.forEach((n, i) => (this[i] = n));
 };
-
-const arr = [5, 4, 3, 2, 1];
-{
-}
-// arr.bubbleSort();
-// arr.selectionSort();
-// arr.inserttionSort();
-// arr.bubbleSort();
-arr.quickSort();
-
-console.log(arr);
