@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <script>
+      function cloneDeep(obj, map = new WeakMap()) {
+        if (obj == null || typeof obj != "object") {
+          return obj;
+        }
+
+        if (obj instanceof Map) {
+          return new Map([...obj]);
+        }
+        if (obj instanceof Set) {
+          return new Set([...obj]);
+        }
+        if (obj instanceof Date) {
+          return new Date(obj.getTime());
+        }
+
+        if (obj instanceof Symbol) {
+          return Symbol(obj.description);
+        }
+
+        // 判断之前是否存过，如果有则直接获取返回
+        if (map.has(obj)) {
+          return map.get(obj);
+        }
+
+        const _newObj = Array.isArray(obj) ? [] : {};
+        // 创建的newObj放到map里
+        map.set(obj, _newObj);
+        for (const key in obj) {
+          if (obj.hasOwnProperty(key)) {
+            _newObj[key] = cloneDeep(obj[key], map);
+          }
+        }
+        for (const key in Object.getOwnPropertySymbols(obj)) {
+          _newObj[key] = cloneDeep(obj.key, map);
+        }
+
+        return _newObj;
+      }
+      const a = { hello: "hello" };
+      const c = { a };
+      a.c = c;
+      // const b = cloneDeep(a);
+      const b = _.cloneDeep(a);
+
+      console.log(a, b, a === b);
+    </script>
+  </body>
+</html>
