@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #chart {
+      }
+
+      text {
+        font-size: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="container">
+      <svg id="chart"></svg>
+    </div>
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.4.4/d3.min.js"
+      integrity="sha512-hnFpvCiJ8Fr1lYLqcw6wLgFUOEZ89kWCkO+cEekwcWPIPKyknKV1eZmSSG3UxXfsSuf+z/SgmiYB1zFOg3l2UQ=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    ></script>
+    <script>
+      const chart = d3.select("#chart").attr("width", 500).attr("height", 200);
+
+      const heightOf = d3.scaleLinear().domain([0, 40]).range([0, 200]);
+      const yOf = d3.scaleLinear().domain([0, 40]).range([200, 0]);
+      console.log({ heightOf, yOf });
+
+      const data = [10, 20, 30, 35];
+      const bW = 20;
+
+      // join( EnterSet, ExitSet ) = UpdateSet
+
+      function update(data) {
+        const bars = chart.selectAll("g").data(data);
+
+        bars
+          .select("text")
+          .attr("y", (d) => {
+            return yOf(d) + 10;
+          })
+          .attr("x", bW / 2 - 5)
+          .attr("fill", "white")
+          .text((d) => d + "");
+
+        bars.select("rect").attr("y", yOf).attr("height", heightOf);
+
+        const enterList = bars
+          .enter()
+          .append("g")
+          .attr("transform", (d, i) => {
+            return `translate(${bW * i}, 0)`;
+          });
+
+        enterList
+          .append("rect")
+          .attr("width", bW - 1)
+          .attr("height", heightOf)
+          .attr("y", 200)
+          .transition()
+          .attr("y", yOf)
+          .attr("fill", "steelblue");
+
+        enterList
+          .append("text")
+          .attr("y", (d) => {
+            return yOf(d) + 10;
+          })
+          .attr("x", bW / 2 - 5)
+          .attr("fill", "white")
+          .text((d) => d + "");
+
+        const exitList = bars
+          .exit()
+          .selectAll("rect")
+          .transition()
+          .attr("y", 200);
+        // .on('end', () => {
+        // 	bars.exit().remove()
+        // })
+      }
+
+      setInterval(() => {
+        if (Math.random() > 0.5) {
+          data.push(10 + Math.floor(Math.random() * 30));
+        } else {
+          data.pop();
+        }
+        update(data);
+      }, 300);
+
+      update(data);
+    </script>
+  </body>
+</html>
