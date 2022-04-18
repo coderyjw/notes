@@ -121,7 +121,7 @@ const reactive3 = (value, dep = new Dep()) => {
 };
 
 let active;
-const watch = (fn) => {
+const watchEffect = (fn) => {
   active = fn;
   active();
   active = null;
@@ -130,7 +130,7 @@ const watch = (fn) => {
 // 测试ref代码
 // const obj = ref3(1);
 
-// watch(() => {
+// watchEffect(() => {
 //   console.log("log", obj.value, Object.prototype.toString.call(obj));
 // });
 // obj.value = 2;
@@ -146,7 +146,7 @@ const watch = (fn) => {
 //     a: 1,
 //   },
 // });
-// watch(() => {
+// watchEffect(() => {
 //   console.log("log", r.a, r.b, r.c.a);
 // });
 // r.a = 2;

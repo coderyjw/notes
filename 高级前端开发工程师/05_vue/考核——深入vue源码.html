@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button id="add">add</button>
+    <div id="app"></div>
+
+    <script>
+      class Dep {
+        constructor() {
+          this.deps = new Set();
+        }
+
+        depend() {
+          if (activeFn) {
+            this.deps.add(activeFn);
+          }
+        }
+
+        notify() {
+          this.deps.forEach((fn) => fn());
+        }
+      }
+
+      let activeFn;
+      const watch = (fn) => {
+        activeFn = fn;
+        activeFn();
+        activeFn = null;
+      };
+
+      const reactive = (orginValue, dep = new Dep()) => {
+        let reactiveObj = {};
+        for (let key in orginValue) {
+          if (orginValue.hasOwnProperty(key)) {
+            if (
+              orginValue[key] == null ||
+              typeof orginValue[key] !== "object"
+            ) {
+              let _newValue = orginValue[key];
+              Object.defineProperty(reactiveObj, key, {
+                get() {
+                  dep.depend();
+                  return _newValue;
+                },
+                set(newValue) {
+                  _newValue = newValue;
+                  dep.notify();
+                },
+              });
+            } else {
+              reactiveObj[key] = reactive(orginValue[key], dep);
+            }
+          }
+        }
+
+        return reactiveObj;
+      };
+
+      let data = reactive({
+        count: 0,
+      });
+
+      document.getElementById("add").addEventListener("click", function () {
+        data.count++;
+      });
+
+      let str;
+
+      watch(() => {
+        str = `点击了${data.count}次`;
+        document.getElementById("app").innerText = str;
+      });
+    </script>
+  </body>
+</html>
