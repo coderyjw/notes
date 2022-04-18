@@ -99,16 +99,23 @@ const reactive = (value, dep = new Dep()) => {
 
 // reactive vue3 方法实现
 const reactive3 = (value, dep = new Dep()) => {
-  const _newValue = new Proxy(value, {
-    get(target, prop) {
-      dep.depend();
-      return target[prop];
-    },
-    set(target, prop, newValue) {
-      target[prop] = newValue;
-      dep.notify();
-    },
-  });
+  let _newValue;
+  for (const key in value) {
+    if (typeof value[key] !== "object") {
+      _newValue = new Proxy(value, {
+        get(target, prop) {
+          dep.depend();
+          return target[prop];
+        },
+        set(target, prop, newValue) {
+          target[prop] = newValue;
+          dep.notify();
+        },
+      });
+    } else {
+      _newValue[key] = reactive3(value[key]);
+    }
+  }
 
   return _newValue;
 };
