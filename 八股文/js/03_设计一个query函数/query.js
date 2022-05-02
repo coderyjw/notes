@@ -60,7 +60,10 @@ query.prototype.groupBy = function (key) {
 };
 
 query.prototype.execute = function () {
-  this.callbcakFnStack.forEach((cb) => cb());
+  while(this.callbcakFnStack.length) {
+    const cb = this.callbcakFnStack.shift()
+    cb()
+  }
   return this.wrapper;
 };
 
