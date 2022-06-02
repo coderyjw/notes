@@ -1,10 +1,11 @@
 import React, { Component } from "react";
 import style from "./listItem.module.css";
-let count = 0;
 class ListItem extends Component {
   constructor(props) {
     super(props);
-    this.state = {};
+    this.state = {
+      count: 0,
+    };
   }
   render() {
     return (
@@ -13,7 +14,9 @@ class ListItem extends Component {
           {this.props.data.title}
         </div>
         <div className="col-2 themed-grid-col">¥{this.props.data.prize}</div>
-        <div className={"col-2 themed-grid-col" + (count ? "" : "-s")}>
+        <div
+          className={"col-2 themed-grid-col" + (this.state.count ? "" : "-s")}
+        >
           <button
             onClick={(e) => this.subCount(e)}
             type="button"
@@ -23,7 +26,7 @@ class ListItem extends Component {
           </button>
           {this.manageCount()}
           <button
-            onClick={this.addCount}
+            onClick={(e) => this.addCount(e)}
             type="button"
             className="btn btn-primary"
           >
@@ -34,17 +37,25 @@ class ListItem extends Component {
     );
   }
   manageCount() {
-    return count + "个";
+    return this.doSomethingWithCount() + "个";
   }
   subCount(e) {
-    console.log({ e },this);
+    this.setState({
+      count: this.state.count - 1,
+    });
   }
 
-  addCount(e) {}
+  addCount(e) {
+    this.setState({
+      count: this.state.count + 1,
+    });
+  }
 
   doSomethingWithCount() {
-    if (count < 0) {
+    if (this.state.count < 0) {
       return 0;
+    } else {
+      return this.state.count;
     }
   }
 }
