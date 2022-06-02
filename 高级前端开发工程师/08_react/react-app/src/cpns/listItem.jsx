@@ -14,13 +14,38 @@ class ListItem extends Component {
         </div>
         <div className="col-2 themed-grid-col">¥{this.props.data.prize}</div>
         <div className={"col-2 themed-grid-col" + (count ? "" : "-s")}>
+          <button
+            onClick={(e) => this.subCount(e)}
+            type="button"
+            className="btn btn-primary"
+          >
+            -
+          </button>
           {this.manageCount()}
+          <button
+            onClick={this.addCount}
+            type="button"
+            className="btn btn-primary"
+          >
+            +
+          </button>
         </div>
       </div>
     );
   }
   manageCount() {
     return count + "个";
+  }
+  subCount(e) {
+    console.log({ e },this);
+  }
+
+  addCount(e) {}
+
+  doSomethingWithCount() {
+    if (count < 0) {
+      return 0;
+    }
   }
 }
 
