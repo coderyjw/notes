@@ -35,7 +35,12 @@ function renderList() {
   }
 }
 function App() {
-  return <Fragment>{renderList()}</Fragment>;
+  return (
+    <Fragment>
+      <h1 className="title">Hello React</h1>
+      {renderList()}
+    </Fragment>
+  );
 }
 
 export default App;

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-
+import style from "./listItem.module.css";
 let count = 0;
 class ListItem extends Component {
   constructor(props) {
@@ -9,7 +9,9 @@ class ListItem extends Component {
   render() {
     return (
       <div className="row mb-3">
-        <div className="col-6 themed-grid-col">{this.props.data.title}</div>
+        <div className={`col-6 themed-grid-col ${style.title}`}>
+          {this.props.data.title}
+        </div>
         <div className="col-2 themed-grid-col">¥{this.props.data.prize}</div>
         <div className={"col-2 themed-grid-col" + (count ? "" : "-s")}>
           {this.manageCount()}

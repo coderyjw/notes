@@ -1,0 +1,9 @@
+.common {
+  font-size: 20px;
+}
+
+.title {
+  color: pink;
+  composes: common from "./common.module.css";
+  composes: common-1 from "./common.module.css";
+}
