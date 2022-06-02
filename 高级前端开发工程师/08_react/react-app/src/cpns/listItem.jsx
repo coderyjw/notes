@@ -6,8 +6,17 @@ class ListItem extends PureComponent {
   //   if (this.state.count === nextState.count) return false;
   //   return true;
   // }
+  constructor(props) {
+    super(props);
+    console.log("Item step1: constructor");
+  }
+
+  componentDidMount() {
+    console.log("Item step3: render");
+  }
+
   render() {
-    console.log("render");
+    console.log("Item step2: render");
     return (
       <div className="row mb-3">
         <div className={`col-6 themed-grid-col ${style.title}`}>

@@ -5,6 +5,7 @@ import ListItem from "./cpns/listItem";
 
 export default class App extends PureComponent {
   constructor(props) {
+    console.log('----------step1: constructor')
     super(props);
     this.state = {
       listData: [
@@ -30,6 +31,7 @@ export default class App extends PureComponent {
     };
   }
   render() {
+    console.log('----------step2: render')
     return (
       <Fragment>
         <h1 className="title">Hello React</h1>
@@ -43,6 +45,10 @@ export default class App extends PureComponent {
         {this.renderList()}
       </Fragment>
     );
+  }
+
+  componentDidMount() {
+    console.log('----------step3: componentDidMount')
   }
 
   renderList() {
