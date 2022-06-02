@@ -1,13 +1,13 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import style from "./listItem.module.css";
-class ListItem extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      count: 0,
-    };
-  }
+class ListItem extends PureComponent {
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   console.log({ nextProps, nextState }, this.state);
+  //   if (this.state.count === nextState.count) return false;
+  //   return true;
+  // }
   render() {
+    console.log("render");
     return (
       <div className="row mb-3">
         <div className={`col-6 themed-grid-col ${style.title}`}>
@@ -15,23 +15,32 @@ class ListItem extends Component {
         </div>
         <div className="col-2 themed-grid-col">¥{this.props.data.prize}</div>
         <div
-          className={"col-2 themed-grid-col" + (this.state.count ? "" : "-s")}
+          className={
+            "col-2 themed-grid-col" + (this.props.data.count ? "" : "-s")
+          }
         >
-          <button
-            onClick={(e) => this.subCount(e)}
-            type="button"
-            className="btn btn-primary"
-          >
-            -
-          </button>
+          {this.props.data.count > 0 ? (
+            <button
+              onClick={() => this.props.onSubCount(this.props.data.id)}
+              type="button"
+              className="btn btn-primary"
+            >
+              -
+            </button>
+          ) : (
+            ""
+          )}
           {this.manageCount()}
           <button
-            onClick={(e) => this.addCount(e)}
+            onClick={() => this.props.onAddCount(this.props.data.id)}
             type="button"
             className="btn btn-primary"
           >
             +
           </button>
+        </div>
+        <div className="col-2 themed-grid-col">
+          ¥{this.props.data.prize * this.props.data.count}
         </div>
       </div>
     );
@@ -47,15 +56,15 @@ class ListItem extends Component {
 
   addCount(e) {
     this.setState({
-      count: this.state.count + 1,
+      count: 10,
     });
   }
 
   doSomethingWithCount() {
-    if (this.state.count < 0) {
+    if (this.props.data.count < 0) {
       return 0;
     } else {
-      return this.state.count;
+      return this.props.data.count;
     }
   }
 }
