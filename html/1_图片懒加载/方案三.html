@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      img {
+        margin: 2000px 0px;
+        width: 100px;
+      }
+    </style>
+  </head>
+  <body>
+    <img data-src="./avator.jpg" alt="" id="img" />
+    <script>
+      const img = document.getElementById("img");
+      const observer = new IntersectionObserver((changes) => {
+        // changes: 目标元素集合
+        changes.forEach((change) => {
+          // intersectionRatio
+          if (change.isIntersecting) {
+            const img = change.target;
+            img.src = img.dataset.src;
+            observer.unobserve(img);
+          }
+        });
+      });
+
+      observer.observe(img);
+    </script>
+  </body>
+</html>
