@@ -116,7 +116,8 @@ TCP/IP协议族按层次分别了五层体系或者四层体系
 - **ACK(Acknowledge)**：这个消息发送前一共收到多少字节。
 
 
-![Snipaste_2022-11-09_00-58-27.png](https://yejiwei.com/static/img/1dd66d4bd39b81c9e7b5f9782befedb7.Snipaste_2022-11-09_00-58-27.png)
+![Snipaste_2022-11-09_00-58-27.png](https://yejiwei.com/static/img/c8d217f492adf55f0724789597cf9034.Snipaste_2022-11-09_00-58-27.png)
+
 
 ## 2.2 四次挥手
 
@@ -129,7 +130,8 @@ tcp终止一个连接，需要经过四次挥手
 - 第四次挥手：客户端收到 `FIN` 之后，一样发送一个 `ACK` 报文作为应答，此时客户端进入 `TIME_WAIT` 状态。需要过一阵子以确保服务端收到自己的 `ACK` 报文之后才会进入 `CLOSED` 状态，服务端收到 ACK 报文之后，就处于关闭连接了，处于 `CLOSED` 状态。
 
 
-![Snipaste_2022-11-09_01-09-45.png](https://yejiwei.com/static/img/7c01563f8c6365e76672a6c4b014d817.Snipaste_2022-11-09_01-09-45.png)
+
+![Snipaste_2022-11-09_01-09-45.png](https://yejiwei.com/static/img/44b4c25b7185b560518e3a15cc376454.Snipaste_2022-11-09_01-09-45.png)
 
 **四次挥手原因**
 
