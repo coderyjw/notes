@@ -1,5 +1,7 @@
 import IStack from "./IStack";
-class ArrayStack<T = any> implements IStack<T> {
+
+// 封装一个栈
+export default class ArrayStack<T = any> implements IStack<T> {
   private data: T[] = [];
 
   push(element: T): void {
@@ -31,3 +33,5 @@ const res = arrayStack.pop();
 const res1 = arrayStack.peek();
 
 console.log(arrayStack);
+
+export {};

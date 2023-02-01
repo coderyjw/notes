@@ -1,9 +1,8 @@
 # 1.栈
 
-- 栈是一个先进后出的数据结构
-- js 中没有队列，但可以用 Array 实现队列的所有功能
-- 队列常用操作: push、pop、stack[stack.length - 1]
--
+- 栈是一种先进先出的数据结构
+- js 中没有栈，但可以用 Array 实现栈的所有功能
+- 栈的常用操作: push、pop、stack[stack.length - 1]
 
 # 2.队列
 
