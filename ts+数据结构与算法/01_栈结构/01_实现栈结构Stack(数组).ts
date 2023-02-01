@@ -1,4 +1,5 @@
-class ArrayStack<T = any> {
+import IStack from "./IStack";
+class ArrayStack<T = any> implements IStack<T> {
   private data: T[] = [];
 
   push(element: T): void {
@@ -9,7 +10,7 @@ class ArrayStack<T = any> {
     return this.data.pop();
   }
 
-  peek(): T {
+  peek(): T | undefined {
     return this.data[this.data.length - 1];
   }
 
@@ -27,5 +28,6 @@ arrayStack.push(1);
 arrayStack.push(2);
 
 const res = arrayStack.pop();
+const res1 = arrayStack.peek();
 
 console.log(arrayStack);
