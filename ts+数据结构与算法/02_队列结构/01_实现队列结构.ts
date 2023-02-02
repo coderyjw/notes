@@ -2,11 +2,11 @@
 export default class ArrayQueue<T = any> {
   private data: T[] = [];
 
-  push(element: T): void {
+  enqueue(element: T): void {
     this.data.push(element);
   }
 
-  pop(): T | undefined {
+  dequeue(): T | undefined {
     return this.data.shift();
   }
 
