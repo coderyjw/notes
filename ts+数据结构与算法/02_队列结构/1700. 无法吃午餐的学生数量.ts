@@ -26,7 +26,6 @@ class ArrayQueue<T = any> {
   }
 }
 
-
 function countStudents(students: number[], sandwiches: number[]): number {
   const studentsQueue = new ArrayQueue<number>(students);
   const sandwichesQueue = new ArrayQueue<number>(sandwiches);
@@ -38,7 +37,7 @@ function countStudents(students: number[], sandwiches: number[]): number {
       sandwichesQueue.dequeue();
       count = 0;
     } else {
-      studentsQueue.enqueue(studentsQueue.dequeue() as number);
+      studentsQueue.enqueue(studentsQueue.dequeue()!);
       count++;
     }
 
@@ -48,5 +47,5 @@ function countStudents(students: number[], sandwiches: number[]): number {
   return 0;
 }
 
-countStudents([1,1,1,0,0,1], [1,0,0,0,1,1]);
+console.log(countStudents([1, 1, 1, 0, 0, 1], [1, 0, 0, 0, 1, 1]));
 export {};

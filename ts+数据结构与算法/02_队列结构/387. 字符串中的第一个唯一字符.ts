@@ -36,40 +36,22 @@ export default class ArrayQueue<T = any> {
   }
 }
 
-// function firstUniqChar(s: string): number {
-//   const map = new Map<string, number>();
-//   const queue = new ArrayQueue<[string, number]>();
-//   for (let i = 0; i < s.length; i++) {
-//     if(!map.has(s[i])) {
-//       map.set(s[i], i)
-//       queue.enqueue([s[i], i]);
-//     } else {
-//       map.set(s[i], -1)
-//       while(queue.size() && map.get((queue.peek() as [string,number])[0]) === -1) {
-//         queue.dequeue()
-//       }
-//     }
-//   }
-
-//   return queue.size() ? (queue.peek() as [string, number])[1] : -1;
-// }
-
 function firstUniqChar(s: string): number {
-  const map = new Map<string, boolean>();
+  const map = new Map<string, number>();
   const queue = new ArrayQueue<[string, number]>();
   for (let i = 0; i < s.length; i++) {
-    let n = map.get(s[i]);
-    if (!n) {
-      map.set(s[i], true);
+    if (!map.has(s[i])) {
+      map.set(s[i], i);
       queue.enqueue([s[i], i]);
     } else {
-      map.set(s[i], false);
-      while (queue.size() && !map.get((queue.peek() as [string, number])[0])) {
+      map.set(s[i], -1);
+      while (queue.size() && map.get(queue.peek()![0]) === -1) {
         queue.dequeue();
       }
     }
   }
 
-  return queue.size() ? (queue.peek() as [string, number])[1] : -1;
+  return queue.size() ? queue.peek()![1] : -1;
 }
+
 console.log(firstUniqChar("aadadaad"));

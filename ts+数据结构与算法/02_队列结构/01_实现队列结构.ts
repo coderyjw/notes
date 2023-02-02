@@ -2,6 +2,10 @@
 export default class ArrayQueue<T = any> {
   private data: T[] = [];
 
+  constructor(data: T[]) {
+    this.data = data || [];
+  }
+
   enqueue(element: T): void {
     this.data.push(element);
   }
