@@ -135,6 +135,10 @@ class LinkedList<T> {
     const index = this.indexOf(value);
     return this.removeAt(index);
   }
+
+  isEmpty(): boolean {
+    return this.size === 0;
+  }
 }
 
 const l = new LinkedList<string>();
@@ -142,8 +146,8 @@ l.append("aaa");
 l.append("bbb");
 l.append("ccc");
 
-l.remove('bbb')
-l.traverse() // aaa->ccc
+l.remove("bbb");
+l.traverse(); // aaa->ccc
 
 // l.traverse(); // aaa->bbb->ccc
 // l.update("ddd", 1); // aaa->ddd->ccc
