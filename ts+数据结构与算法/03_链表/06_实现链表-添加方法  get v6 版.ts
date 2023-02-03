@@ -50,7 +50,7 @@ class LinkedList<T> {
 
   insert(value: T, position: number): boolean {
     // 1. 越界判断
-    if (position < 0 || position > this.size) return false;
+    if (position < 0 || position >= this.size) return false;
 
     // 2. 根据 value 创建新的节点
     const newNode = new Node(value);
@@ -78,7 +78,7 @@ class LinkedList<T> {
 
   removeAt(position: number): T | null {
     // 1. 越界判断
-    if (position < 0 || position > this.size) return null;
+    if (position < 0 || position >= this.size) return null;
 
     // 2. 判断是否删除第一个节点
     let current = this.head;

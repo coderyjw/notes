@@ -146,9 +146,10 @@ l.append("aaa");
 l.append("bbb");
 l.append("ccc");
 
-l.remove("bbb");
+// l.remove("bbb");
 l.traverse(); // aaa->ccc
 
+console.log(l.get(3));
 // l.traverse(); // aaa->bbb->ccc
 // l.update("ddd", 1); // aaa->ddd->ccc
 // l.traverse();
