@@ -69,28 +69,28 @@ class BSTree<T> {
     }
   }
 
-  postOrderTraverse() {
-    let stack: TreeNode<T>[] = [];
-    let current: TreeNode<T> | null = this.root;
-    let lastVisitedNode: TreeNode<T> | null = null;
+postOrderTraverse() {
+  let stack: TreeNode<T>[] = [];
+  let current: TreeNode<T> | null = this.root;
+  let lastVisitedNode: TreeNode<T> | null = null;
 
-    while (current !== null || stack.length !== 0) {
-      while (current !== null) {
-        stack.push(current);
-        current = current.left;
-      }
+  while (current !== null || stack.length !== 0) {
+    while (current !== null) {
+      stack.push(current);
+      current = current.left;
+    }
 
-      current = stack[stack.length - 1];
-      if (current.right === null || current.right === lastVisitedNode) {
-        console.log(current.value);
-        lastVisitedNode = current;
-        stack.pop();
-        current = null;
-      } else {
-        current = current.right;
-      }
+    current = stack[stack.length - 1];
+    if (current.right === null || current.right === lastVisitedNode) {
+      console.log(current.value);
+      lastVisitedNode = current;
+      stack.pop();
+      current = null;
+    } else {
+      current = current.right;
     }
   }
+}
 }
 
 const bst = new BSTree<number>();
