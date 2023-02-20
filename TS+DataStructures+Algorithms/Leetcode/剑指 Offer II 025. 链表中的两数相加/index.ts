@@ -22,59 +22,18 @@ function reverseList(head: ListNode | null): ListNode | null {
     next = next.next;
     curr.next = prev;
   }
-  return curr;
+  return curr
 }
 
-function addTwoNumbers(
-  l1: ListNode | null,
-  l2: ListNode | null
-): ListNode | null {
-  l1 = reverseList(l1);
-  l2 = reverseList(l2);
-  let tmp: number = 0;
-  let ret = new ListNode();
-  let p = ret;
+function addTwoNumbers(l1: ListNode | null, l2: ListNode | null): ListNode | null {
 
-  while (l1 && l2) {
-    p.next = new ListNode((tmp + l1.val + l2.val) % 10);
-    tmp = Math.floor((tmp + l1.val + l2.val) / 10);
-    l1 = l1.next;
-    l2 = l2.next;
-    p = p.next;
+  l1 = reverseList(l1)
+  l2 = reverseList(l2)
+  let tmp:number = 0
+  const newL = new ListNode(0)
+  while(l1 && l1.next && l2 && l2.next) {
+
   }
-
-  while (l1) {
-    p.next = new ListNode((tmp + l1.val) % 10);
-    tmp = Math.floor((tmp + l1.val) / 10);
-    l1 = l1.next;
-    p = p.next;
-  }
-
-  while (l2) {
-    p.next = new ListNode((tmp + l2.val) % 10);
-    tmp = Math.floor((tmp + l2.val) / 10);
-    l2 = l2.next;
-    p = p.next;
-  }
-
-  if (tmp) p.next = new ListNode(tmp);
-  return reverseList(ret.next);
 }
 
 export {};
-
-const l1 = new ListNode(7);
-let p = l1;
-p.next = new ListNode(2);
-p = p.next;
-p.next = new ListNode(4);
-p = p.next;
-p.next = new ListNode(3);
-
-const l2 = new ListNode(5);
-p = l2;
-p.next = new ListNode(6);
-p = p.next;
-p.next = new ListNode(4);
-
-console.log(addTwoNumbers(l1, l2));
