@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script crossorigin src="./react.development.js"></script>
+    <script crossorigin src="./react-dom.development.js"></script>
+    <script src="./babel.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+    /* 
+      常见生命周期钩子函数
+      1. componentDidMount 组件挂载的时候调用 推荐在这里发起 ajax 请求
+      2. componentDidUßpdate 组件更新的时候调用 触发组件更新的方法有以下三种
+        1. new props：props更改ß
+        2. setState：state更改
+        3. forceUpdate：强制更新 会跳过 shouldComponentUpdate 这个钩子函数
+      3. componentWillUnmount 组件卸载的时候调用 
+    */
+
+      // 生命周期图解 https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/
+      class App extends React.Component {
+        constructor(props) {
+          super(props);
+          this.state = { msg: "hello" };
+          console.log("constructor");
+        }
+
+        componentDidMount() {
+          // react 推荐在这里发起 ajax 请求
+          console.log("componentDidMount");
+        }
+        componentDidUpdate() {
+          // dom 更新后触发的钩子函数
+          // 三种方式触发更新
+          // 1. new props
+          // 2. setState
+          // 3. forceUpdate 强制更新 会跳过 shouldComponentUpdate 这个钩子函数
+          console.log("componentDidUpdate");
+        }
+
+        componentWillUnmount() {
+          console.log("componentWillUnMount");
+        }
+
+        shouldComponentUpdate() {
+          console.log("shouldComponentUpdate");
+          return true;
+        }
+        onClick = (e) => {
+          // 1.
+          // this.setState({
+          //   msg: "world",
+          // });
+
+          // 2.
+          // this.forceUpdate();
+
+          // 3.
+          root.unmount();
+        };
+
+        render() {
+          console.log("render");
+          return (
+            <div>
+              <h1>常见生命周期钩子函数: {this.state.msg}</h1>
+              <button onClick={this.onClick}>Change</button>
+            </div>
+          );
+        }
+      }
+
+      const el = document.querySelector("#app");
+      const root = ReactDOM.createRoot(el);
+      root.render(<App />);
+    </script>
+  </body>
+</html>
