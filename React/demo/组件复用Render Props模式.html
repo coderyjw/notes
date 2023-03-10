@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script crossorigin src="./react.development.js"></script>
+    <script crossorigin src="./react-dom.development.js"></script>
+    <script src="./babel.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+      class MouseXY extends React.Component {
+        state = {
+          x: "0",
+          y: "0",
+        };
+        componentDidMount() {
+          window.addEventListener("mousemove", this.move);
+        }
+
+        componentWillUnmount() {
+          window.removeEventListener("mousemove", this.move);
+        }
+
+        move = (e) => {
+          this.setState({
+            x: e.x,
+            y: e.y,
+          });
+        };
+
+        render() {
+          return (
+            <React.Fragment>
+              {this.props.render(this.state.x, this.state.y)}
+            </React.Fragment>
+          );
+        }
+      }
+
+      class App extends React.Component {
+        render() {
+          return (
+            <MouseXY
+              render={(x, y) => {
+                return (
+                  <React.Fragment>
+                    <div>x: {x}</div>
+                    <div>y: {y}</div>
+                  </React.Fragment>
+                );
+              }}
+            />
+          );
+        }
+      }
+      const root = ReactDOM.createRoot(document.querySelector("#app"));
+      let element = <App />;
+      root.render(element);
+    </script>
+  </body>
+</html>
