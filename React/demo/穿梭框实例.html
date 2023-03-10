@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      li {
+        list-style: none;
+        height: 32px;
+        line-height: 32px;
+        padding: 5px 10px;
+        cursor: pointer;
+      }
+
+      li.isActive {
+        color: #fff;
+        background-color: red;
+      }
+      .transfer {
+        display: flex;
+        align-items: center;
+        width: 400px;
+        margin: 20px auto;
+      }
+      .transfer ul {
+        width: 150px;
+        height: 400px;
+        border: 1px black solid;
+      }
+      .transfer button {
+        height: 50px;
+        flex-grow: 1;
+      }
+    </style>
+    <script src="./react.development.js"></script>
+    <script src="./react-dom.development.js"></script>
+    <script src="./babel.min.js"></script>
+    <script src="./lodash.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+      let app = document.querySelector("#app");
+      let root = ReactDOM.createRoot(app);
+      class Transfer extends React.PureComponent {
+        state = {
+          leftList: [
+            { id: 1, isActive: false, text: "aaa" },
+            { id: 2, isActive: false, text: "bbb" },
+            { id: 3, isActive: false, text: "ccc" },
+            { id: 4, isActive: false, text: "ddd" },
+            { id: 5, isActive: false, text: "eee" },
+          ],
+          rightList: [],
+          disabled: true,
+        };
+
+        handleClickLeft = (item) => {
+          const leftList = _.cloneDeep(this.state.leftList);
+          const target = leftList.find((_) => _.id === item.id);
+          target.isActive = !target.isActive;
+
+          this.setState({
+            leftList,
+            disabled: !leftList.find((_) => _.isActive),
+          });
+        };
+
+        handleClickBtn = () => {
+          let leftList = _.cloneDeep(this.state.leftList);
+          let rightList = leftList.filter((_) => _.isActive);
+          rightList = [...rightList, ...this.state.rightList];
+          leftList = leftList.filter((_) => !_.isActive);
+          this.setState({
+            rightList,
+            leftList,
+          });
+        };
+
+        render() {
+          return (
+            <div className="transfer">
+              <ul className="left">
+                {this.state.leftList.map((item) => (
+                  <li
+                    key={item.id}
+                    className={item.isActive === true ? "isActive" : ""}
+                    onClick={() => this.handleClickLeft(item)}
+                  >
+                    {item.text}
+                  </li>
+                ))}
+              </ul>
+              <button
+                disabled={this.state.disabled}
+                onClick={this.handleClickBtn}
+              >
+                →
+              </button>
+              <ul className="right">
+                {this.state.rightList.map((item) => (
+                  <li key={item.id}>{item.text}</li>
+                ))}
+              </ul>
+            </div>
+          );
+        }
+      }
+      let element = <Transfer />;
+      root.render(element);
+    </script>
+  </body>
+</html>
