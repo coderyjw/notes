@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script crossorigin src="./react.development.js"></script>
+    <script crossorigin src="./react-dom.development.js"></script>
+    <script src="./babel.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+      // 1. 创建 context
+      const MyContext = React.createContext();
+      class Son extends React.Component {
+        // 4. 在组件的逻辑中获取context
+        static contextType = MyContext;
+        componentDidMount() {
+          console.log(this.context);
+        }
+        render() {
+          return (
+            // 3.使用者
+            <MyContext.Consumer>{(value) => value.msg}</MyContext.Consumer>
+          );
+        }
+      }
+
+      class Father extends React.Component {
+        render() {
+          return <Son />;
+        }
+      }
+
+      class App extends React.Component {
+        state = {
+          msg: "hello world",
+        };
+        render() {
+          return (
+            // 2. 提供者
+            <MyContext.Provider value={{ msg: this.state.msg }}>
+              <Father />
+            </MyContext.Provider>
+          );
+        }
+      }
+      const root = ReactDOM.createRoot(document.querySelector("#app"));
+      let element = <App />;
+      root.render(element);
+    </script>
+  </body>
+</html>
