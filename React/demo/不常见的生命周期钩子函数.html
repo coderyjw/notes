@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script crossorigin src="./react.development.js"></script>
+    <script crossorigin src="./react-dom.development.js"></script>
+    <script src="./babel.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+      /* 
+      常见生命周期钩子函数
+      1. getDerivedStateFromProps：props 派生 state 的值
+      2. shouldComponentUpdate：优化render渲染次数
+      3. getSnapshotBeforeUpdate：DOM更新前的快照
+    */
+
+      // 生命周期图解 https://projects.wojtekmaj.pl/react-lifecycle-methods-diagram/
+      class App extends React.Component {
+        state = {
+          isAdd: false,
+          lastNow: 0,
+        };
+
+        static getDerivedStateFromProps = (props, state) => {
+          return {
+            isAdd: props.currentNow > state.lastNow,
+            lastNow: props.currentNow,
+          };
+        };
+
+        render() {
+          return (
+            <div>
+              {this.state.idAdd ? "累加" : "累减"}：{this.state.lastNow}
+            </div>
+          );
+        }
+      }
+
+      const el = document.querySelector("#app");
+      const root = ReactDOM.createRoot(el);
+
+      let now = 0;
+      let dir = 1;
+
+      setInterval(() => {
+        if (now === 0) {
+          dir = 1;
+        } else if (now === 5) {
+          dir = -1;
+        }
+
+        now += dir;
+        let element = <App currentNow={now} />;
+        root.render(element);
+      }, 1000);
+    </script>
+  </body>
+</html>
