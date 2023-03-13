@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script crossorigin src="./react.development.js"></script>
+    <script crossorigin src="./react-dom.development.js"></script>
+    <script src="./babel.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+      const { useEffect, useState, useLayoutEffect, useRef, useContext, useCallback, useMemo } = React;
+
+      /* useCallback 的作用是用来缓存函数，避免每次渲染时都创建新的函数。 */
+      /* useMemo 的作用是用来缓存计算结果，避免每次渲染时都重新计算,useCallback只是useMemo一种特殊形式 */
+      function App() {
+        const [count, setCount] = useState(0);
+        const handleClick = () => {
+          setCount(count + 1);
+        };
+        const foo = useCallback(() => {}, []);
+        const bar = useMemo(() => [1, 2, 3], []);
+        console.log("App render");
+        return (
+          <div onClick={handleClick}>
+            hello world:{count}
+            <Head onClick={foo} bar={bar} />
+          </div>
+        );
+      }
+
+      const Head = React.memo(function () {
+        console.log("Head render");
+        return <h1>head: {Math.random()}</h1>;
+      });
+
+      const el = document.querySelector("#app");
+      const root = ReactDOM.createRoot(el);
+      root.render(<App />);
+    </script>
+  </body>
+</html>
