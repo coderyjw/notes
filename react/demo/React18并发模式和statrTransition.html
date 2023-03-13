@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script crossorigin src="./react.development.js"></script>
+    <script crossorigin src="./react-dom.development.js"></script>
+    <script src="./babel.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+      const {
+        useEffect,
+        useState,
+        useLayoutEffect,
+        useRef,
+        useContext,
+        useCallback,
+        useMemo,
+        useReducer,
+        startTransition,
+      } = React;
+
+      /* 1. React 18之前，渲染是一个单一的、不间断的、同步的事务，一旦渲染开始，就不能被中断 */
+
+      /* 2. React 18 引入并发模式，它允许你将标记更新作为一个transitions，这会告诉React它们可以被中断执行。这样可以把进击的任务先更新，不紧急的任务后更新。 */
+
+      const App = React.memo(() => {
+        const [keywords, setKewords] = useState("");
+        const [query, setQuery] = useState("");
+        const handleChange = (e) => {
+          setKewords(e.target.value); // 第一个任务
+          // setQuery(e.target.value);
+
+          startTransition(() => {
+            setQuery(e.target.value); // 第二个任务（不紧急）
+          });
+        };
+
+        return (
+          <React.Fragment>
+            <input type="text" value={keywords} onChange={handleChange} />
+            <List query={query} />
+          </React.Fragment>
+        );
+      });
+
+      const List = React.memo(({ query }) => {
+        const text = "hello react";
+        let items = [];
+        console.log({ query }, text.indexOf(query), text.split(query));
+        if (query != "" && text.indexOf(query) > -1) {
+          items = Array.from({ length: 10000 }, (_, index) => (
+            <li key={index}>
+              {text.split(query)[0]}
+              <span style={{ color: "red" }}>{query}</span>
+              {text.split(query)[1]}
+            </li>
+          ));
+        } else {
+          items = Array.from({ length: 10000 }, (_, index) => <li key={index}>{text}</li>);
+        }
+        return <ul>{items}</ul>;
+      });
+
+      const el = document.querySelector("#app");
+      const root = ReactDOM.createRoot(el);
+      root.render(<App />);
+    </script>
+  </body>
+</html>
