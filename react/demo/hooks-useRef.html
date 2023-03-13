@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script crossorigin src="./react.development.js"></script>
+    <script crossorigin src="./react-dom.development.js"></script>
+    <script src="./babel.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+      const { useEffect, useState, useLayoutEffect, useRef } = React;
+
+      const Head = React.forwardRef((props, ref) => {
+        return (
+          <React.Fragment>
+            <div>hello head</div>
+            <input ref={ref} />
+          </React.Fragment>
+        );
+      });
+      function App() {
+        /* 1. DOM 操作 */
+        const myRef = useRef();
+        const headRef = useRef();
+        const handleClick = () => {
+          console.log(myRef, headRef);
+          myRef.current.focus();
+          headRef.current.focus();
+        };
+
+        /* 2. 组件转发 React.forwardRef() */
+        return (
+          <div onClick={handleClick}>
+            <input type="text" ref={myRef} />
+            hello react
+            <Head ref={headRef} />
+          </div>
+        );
+      }
+
+      const el = document.querySelector("#app");
+      const root = ReactDOM.createRoot(el);
+      root.render(<App />);
+    </script>
+  </body>
+</html>

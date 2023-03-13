@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script crossorigin src="./react.development.js"></script>
+    <script crossorigin src="./react-dom.development.js"></script>
+    <script src="./babel.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+      const { useEffect, useState, useLayoutEffect, useRef, useImperativeHandle } = React;
+
+      const Head = React.forwardRef((props, ref) => {
+        const ref1 = useRef();
+        const ref2 = useRef();
+
+        useImperativeHandle(ref, () => ({
+          getMyRef1: () => ref1,
+          getMyRef2: () => ref2,
+        }));
+        return (
+          <React.Fragment>
+            <div>hello head</div>
+            <input ref={ref1} />
+            <input ref={ref2} />
+          </React.Fragment>
+        );
+      });
+      function App() {
+        /* 1. DOM 操作 */
+        let myRef1 = useRef();
+        let myRef2 = useRef();
+
+        const handleClick = () => {
+          console.log(myRef1, myRef2);
+          myRef1.current.focus();
+          // myRef2.current.focus();
+        };
+
+        /* 2. 组件转发 React.forwardRef() */
+        return (
+          <div onClick={handleClick}>
+            <Head
+              ref={(ref) => {
+                myRef1 = ref.getMyRef1();
+                myRef2 = ref.getMyRef2();
+              }}
+            />
+          </div>
+        );
+      }
+
+      const el = document.querySelector("#app");
+      const root = ReactDOM.createRoot(el);
+      root.render(<App />);
+    </script>
+  </body>
+</html>
