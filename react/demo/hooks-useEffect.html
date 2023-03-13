@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script crossorigin src="./react.development.js"></script>
+    <script crossorigin src="./react-dom.development.js"></script>
+    <script src="./babel.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+      /* 1. Effect Hook 可以让你在函数组件中执行副作用，副作用即：DOM操作、获取数据、记录日志 */
+      /* 2. Effect Hook 可以用来代替类组件中的生命周期钩子函数 */
+
+      const { useEffect, useState, useLayoutEffect } = React;
+      function App() {
+        /* 3. 异步函数，在浏览器渲染DOM后触发 */
+        useEffect(() => {
+          console.log("didMount or didUpdate");
+
+          /* 4. 这里回调函数可以用来清理副作用 */
+          return () => {
+            console.log("beforeUpdate or willUnmount");
+          };
+        });
+
+        /* 5. 使用多个 Effect 实现关注点分离 */
+        const [count, setCount] = useState(0);
+        // useEffect(() => {
+        //   console.log(count);
+        // });
+
+        const [msg, setMsg] = useState("hello world");
+        // useEffect(() => {
+        //   console.log(msg);
+        // });
+
+        /* 6. 通过修改 useEffect 第二个参数的依赖数组，只有当数组中的响应式数据改变的时候才会重新执行回调函数。性能优化 */
+
+        /* 7. 当 useEffect 有响应式数据，那么依赖数组中一定要有这个响应式数据*/
+        // useEffect(() => {
+        //   setCount(count + 1);
+        // }, [count]); // ❌
+
+        /* 8. 只有初始化的时候触发，模拟初始生命周期钩子 */
+        // useEffect(() => {
+        //   console.log("hello world");
+        // }, []);
+
+        /* 9. 会造成定时器的累加，所以需要清理，非常麻烦 */
+        // useEffect(() => {
+        //   setInterval(() => {
+        //     setCount((count) => count + 1);
+        //   }, 1000);
+        // }, [count]);
+
+        // useEffect(() => {
+        //   setInterval(() => {
+        //     setCount((count) => count + 1);
+        //   }, 1000);
+        // }, []);
+
+        /* useEffect 是在渲染被绘制到屏幕之后执行的，是异步的 */
+        /* useLayoutEffect 是在渲染之后但在屏幕更新之前，是同步的 */
+        /* 大部份情况下我们采用useEffect，性能更好，但当你的useEffect里面的操作需要处理DOM，并且会改变页面的样式，
+      就需要用useLayoutEffect,否则可能会出现闪屏 */
+
+        /* useEffect(() => {
+          let i = 0;
+          while (i < 10000000) {
+            i++;
+          }
+          setMsg("hi react");
+        }); */
+
+        useLayoutEffect(() => {
+          let i = 0;
+          while (i < 10000000) {
+            i++;
+          }
+          setMsg("hi react");
+        });
+        return (
+          <div>
+            {msg}:{count}
+          </div>
+        );
+      }
+
+      const el = document.querySelector("#app");
+      const root = ReactDOM.createRoot(el);
+      root.render(<App />);
+    </script>
+  </body>
+</html>
