@@ -26,12 +26,25 @@
         /* 1. DOM 操作 */
         const myRef = useRef();
         const headRef = useRef();
+        const countRef = useRef(0);
+        const isUpdate = useRef(false);
         const handleClick = () => {
           console.log(myRef, headRef);
           myRef.current.focus();
           headRef.current.focus();
+
+          /* 3. useRef 具有记忆功能：对普通值进行记忆，类似于class的实例属性 */
+          countRef.current++;
+          console.log(countRef.current);
         };
 
+        /* 4. useRef 可以让 useEffect做到只在更新的时候触发 */
+        useEffect(() => {
+          if (isUpdate.current) {
+            console.log("只在更新的时候触发");
+          }
+        });
+        
         /* 2. 组件转发 React.forwardRef() */
         return (
           <div onClick={handleClick}>
