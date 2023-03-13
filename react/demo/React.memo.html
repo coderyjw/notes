@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script crossorigin src="./react.development.js"></script>
+    <script crossorigin src="./react-dom.development.js"></script>
+    <script src="./babel.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+      const { useEffect, useState, useLayoutEffect, useRef, useContext } = React;
+
+      /* 
+      React.memo()是React库提供的一个高阶组件(Higher Order Component)，用于优化React组件的性能。它可以用来包装一个组件，然后在组件被重新渲染时，对props进行浅比较，如果props没有变化，则不会重新渲染组件。
+
+React.memo()函数接受两个参数，第一个是被包裹的组件，第二个是一个可选的比较函数。如果提供了比较函数，React.memo()将使用它来比较前一个props和下一个props是否相等。如果没有提供比较函数，React.memo()将使用浅比较来检查props是否相等。
+
+React.memo()的作用是减少组件的渲染次数，从而提高应用程序的性能。当父组件中的状态或属性变化时，所有子组件都会重新渲染，这可能会导致性能瓶颈。如果子组件的props没有变化，则可以使用React.memo()来避免不必要的重新渲染，从而提高应用程序的性能。
+
+需要注意的是，React.memo()只会对props进行比较，如果组件的内部状态发生了变化，它仍然会重新渲染。此外，如果组件的props是引用类型(如对象或数组)，并且props没有发生变化，但是对象或数组本身的属性值发生了变化，那么React.memo()也无法检测到这种变化，仍然会重新渲染组件。在这种情况下，可以考虑使用immutable.js等工具来解决问题。
+
+总之，React.memo()是React库提供的一个高阶组件，可以用于优化React组件的性能。它可以避免不必要的重新渲染，从而提高应用程序的性能。
+      */
+      const MyContext = React.createContext("默认值");
+      function App() {
+        const [count, setCount] = useState(0);
+        const [info, setInfo] = useState({ name: "zhansgan", age: 25 });
+        const handleClick = () => {
+          setCount(1);
+          info.age = 26;
+        };
+        console.log("app render", info);
+        return (
+          <div onClick={handleClick}>
+            hello react:{count}
+            <MyChild info={info} />
+          </div>
+        );
+      }
+      // const App = React.memo(function () {
+      //   const [count, setCount] = useState(0);
+      //   const handleClick = () => {
+      //     setCount(1);
+      //   };
+      //   console.log("app render");
+      //   return (
+      //     <div onClick={handleClick}>
+      //       hello react:{count}
+      //       <MyChild />
+      //     </div>
+      //   );
+      // });
+      // function MyChild(props) {
+      //   let value = useContext(MyContext);
+      //   console.log("child render", props.info);
+      //   return (
+      //     <div>
+      //       <h1>{value}</h1>
+      //       <span>{props.info.name}</span>
+      //       <span>{props.info.age}</span>
+      //     </div>
+      //   );
+      // }
+      const MyChild = React.memo(function (props) {
+        let value = useContext(MyContext);
+        console.log("child render", props.info);
+        return (
+          <div>
+            <h1>{value}</h1>
+            <span>{props.info.name}</span>
+            <span>{props.info.age}</span>
+          </div>
+        );
+      });
+
+      const el = document.querySelector("#app");
+      const root = ReactDOM.createRoot(el);
+      root.render(<App />);
+    </script>
+  </body>
+</html>
