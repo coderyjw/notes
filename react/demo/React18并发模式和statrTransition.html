@@ -22,6 +22,8 @@
         useMemo,
         useReducer,
         startTransition,
+        useTransition,
+        useDeferredValue,
       } = React;
 
       /* 1. React 18之前，渲染是一个单一的、不间断的、同步的事务，一旦渲染开始，就不能被中断 */
@@ -30,19 +32,26 @@
 
       const App = React.memo(() => {
         const [keywords, setKewords] = useState("");
-        const [query, setQuery] = useState("");
+
+        // const [query, setQuery] = useState("");
+        /* useTransition 返回一个状态值表示过渡任务的等待状态，以及一个启动该过渡的等待状态，以及一个启动该过渡任务的函数 */
+        // const [pending, startTransition] = useTransition();
+
+        /* useDeferredValue 接受一个值，并返回该值的新副本，该副本将推迟到更紧急地更新之后 */
+        const query = useDeferredValue(keywords);
         const handleChange = (e) => {
           setKewords(e.target.value); // 第一个任务
           // setQuery(e.target.value);
 
-          startTransition(() => {
-            setQuery(e.target.value); // 第二个任务（不紧急）
-          });
+          // startTransition(() => {
+          //   setQuery(e.target.value); // 第二个任务（不紧急）
+          // });
         };
 
         return (
           <React.Fragment>
             <input type="text" value={keywords} onChange={handleChange} />
+            {/*{pending ? "loading..." : <List query={query} />}*/}
             <List query={query} />
           </React.Fragment>
         );
