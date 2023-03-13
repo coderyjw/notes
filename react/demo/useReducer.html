@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <script crossorigin src="./react.development.js"></script>
+    <script crossorigin src="./react-dom.development.js"></script>
+    <script src="./babel.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+      const { useEffect, useState, useLayoutEffect, useRef, useContext, useCallback, useMemo, useReducer } = React;
+      /* 1. useReducer是useState的替代方案。它接受一个形如(state,action) => newState 的 reducer，并返回当前的 state 以及与其配套的dispatch方法 */
+
+      /* 2. 在某些场景下，useReducer会比useState更适用，例如state逻辑较复杂且包含多个子值，或者下一个state依赖于之前的state */
+
+      // function App() {
+      //   const [isLogin, setLogin] = useState(false);
+      //   const [isLogout, setLogout] = useState(false);
+      //   const handleLogin = () => {
+      //     setLogin(true);
+      //     setLogout(false);
+      //   };
+
+      //   const handleLogout = () => {
+      //     setLogin(false);
+      //     setLogout(true);
+      //   };
+
+      //   return (
+      //     <div>
+      //       {isLogin ? <button onClick={handleLogout}>退出</button> : <button onClick={handleLogin}>登录</button>}
+      //     </div>
+      //   );
+      // }
+
+      let initState = { isLogin: false, isLogout: true };
+      let loginReducer = (state, action) => {
+        switch (action.type) {
+          case "login":
+            return { isLogin: true, isLogout: false };
+          case "logout":
+            return { isLogin: false, isLogout: true };
+          default:
+            throw new Error();
+        }
+      };
+      const App = () => {
+        const [loginState, loginDispatch] = useReducer(loginReducer, initState);
+        const handleLogin = () => {
+          loginDispatch({ type: "login" });
+        };
+
+        const handleLogout = () => {
+          loginDispatch({ type: "logout" });
+        };
+        return (
+          <div>
+            {loginState.isLogin ? (
+              <button onClick={handleLogout}>退出</button>
+            ) : (
+              <button onClick={handleLogin}>登录</button>
+            )}
+          </div>
+        );
+      };
+
+      const el = document.querySelector("#app");
+      const root = ReactDOM.createRoot(el);
+      root.render(<App />);
+    </script>
+  </body>
+</html>
