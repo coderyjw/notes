@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+      }
+      li {
+        list-style: none;
+      }
+      .wrapper {
+        width: 200px;
+        margin: 30px auto;
+      }
+      .wrapper i {
+        font-size: 30px;
+      }
+      .wrapper i.active {
+        color: red;
+      }
+    </style>
+    <link rel="stylesheet" href="./img/iconfont.css" />
+    <script src="./react.development.js"></script>
+    <script src="./react-dom.development.js"></script>
+    <script src="./babel.min.js"></script>
+    <script src="./lodash.min.js"></script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <script type="text/babel">
+      let app = document.querySelector("#app");
+      let root = ReactDOM.createRoot(app);
+      let { useState } = React;
+      let Welcome = () => {
+        const [list, setList] = useState([
+          { id: 1, num: 50, checked: false },
+          { id: 2, num: 25, checked: true },
+          { id: 3, num: 67, checked: false },
+        ]);
+        const handleClick = (item) => {
+          const newList = _.cloneDeep(list).map((_) => {
+            if (_.id === item.id) {
+              if (_.checked) {
+                _.num--;
+                _.checked = false;
+              } else {
+                _.num++;
+                _.checked = true;
+              }
+            }
+            return _;
+          });
+
+          setList(newList);
+        };
+        return (
+          <ul className="wrapper">
+            {list.map((v) => (
+              <li key={v.id} onClick={() => handleClick(v)}>
+                <Like {...v} />
+              </li>
+            ))}
+          </ul>
+        );
+      };
+      let Like = (props) => {
+        return (
+          <React.Fragment>
+            {props.checked ? "unlike" : "like"} {props.num}
+          </React.Fragment>
+        );
+      };
+      let element = <Welcome />;
+      root.render(element);
+    </script>
+  </body>
+</html>
